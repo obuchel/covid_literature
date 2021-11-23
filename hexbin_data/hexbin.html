@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/motion-ui/1.2.3/motion-ui.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation-prototype.min.css">
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css' rel='stylesheet' type='text/css'>
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+<style>
+  #keywords{
+      font-size:10px;
+  }
+  </style>
+<!-- specific plugin -->
+<script src="https://d3js.org/d3-hexbin.v0.2.min.js"></script>
+<body>
+
+   <article class="grid-container">
+     <div class="grid-x grid-margin-x">
+        <div class="medium-6 cell">
+  <!-- Create a div where the graph will take place -->
+ <input type="text" size="50" id="search" name="search" value="Enter search statement here"><input id="submit" type="submit" value="Submit">
+<br><select id="select_menu"></select>
+<br><div id="my_dataviz"></div>
+	</div>
+	<div class="medium-6 large-5 cell large-offset-1">
+	  <div id="keywords"></div>
+	   </div>
+	
+	 </div>
+ </div>
+<script>
+  var all_names=["No journal layers","BMJ","PLoS One","PLoS ONE [Electronic Resource]","PLoS Biol","bioRxiv","Int J Environ Res Public Health","Sci Rep","Nature","Lancet","Cureus","Viruses","JAMA","Front Immunol","BMJ Open","Int J Infect Dis","Journal of virology","J Med Virol","Science","Front Public Health","Front Psychol","J Med Internet Res","Clin Infect Dis","Sustainability","Emerg Infect Dis","Nat Commun","BMC Infect Dis","Chest","J. med. virol","Vaccine","Int J Mol Sci","Sci Total Environ","Crit Care","BMC Public Health","J Infect","JAMA Netw Open","Infect Dis","N Engl J Med","Virology","Medicine (Baltimore)","Nutrients","J Clin Med"]
+//"Int. j. environ. res. public health (Online)"
+ // selectElement('leaveCode', '11')
+var select = document.getElementById('select_menu');
+function selectElement(valueToSelect) {    
+  var opt = document.createElement('option');
+    opt.value = valueToSelect;
+    opt.innerHTML = valueToSelect;
+    select.appendChild(opt);
+}
+  for (var i=0; i<all_names.length; i++){
+  selectElement( all_names[i]) 
+  }
+// set the dimensions and margins of the graph
+var margin = {top: 10, right: 30, bottom: 30, left: 40},
+    width = 460 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.select("#my_dataviz")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+// read data
+//d3.csv("d3_visualization.csv", function(data) {
+
+  // Add X axis
+  var x = d3.scaleLinear()
+      .domain([2,26])
+    .range([ 0, width ]);
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x));
+
+  // Add Y axis
+  var y = d3.scaleLinear()
+      .domain([-5,20])
+    .range([ height, 0 ]);
+  svg.append("g")
+    .call(d3.axisLeft(y));
+
+  // Reformat the data: d3.hexbin() needs a specific format
+/*  var inputForHexbinFun = []
+  data.forEach(function(d) {
+    inputForHexbinFun.push( [x(d.x), y(d.y)] )  // Note that we had the transform value of X and Y !
+  })*/
+//    console.log(JSON.stringify(inputForHexbinFun));
+  // Prepare a color palette
+  var color = d3.scaleLinear()
+      .domain([1,1000, 2500]) // Number of points in the bin?
+      .range(["steelblue", "yellow", "#800026"])
+
+  // Compute the hexbin data
+  var hexbin = d3.hexbin()
+    .radius(5) // size of the bin in px
+    .extent([ [0, 0], [width, height] ])
+//    console.log(JSON.stringify(hexbin(inputForHexbinFun)));
+
+    /*
+    var dd=hexbin(inputForHexbinFun);
+    var all=[];
+    for (var i=0; i<dd.length; i++) {
+	all.push({"x":dd[i]["x"],"y":dd[i]["y"],"length":dd[i]["length"]});
+	//console.log(dd[i]["x"],dd[i]["y"],dd[i]["length"]);
+    }
+    
+    console.log(JSON.stringify(all));
+    */
+  d3.json("data_hexbin2.json",function(all){
+
+ //console.log(JSON.stringify(all));
+  // Plot the hexbins
+  svg.append("clipPath")
+      .attr("id", "clip")
+    .append("rect")
+      .attr("width", width)
+      .attr("height", height)
+      function add_table(kk){
+	  d3.csv("hexbin_data/file_"+kk.toString()+".csv",function(da){
+	      console.log(da);
+	  });
+      }
+  svg.append("g")
+    .attr("clip-path", "url(#clip)")
+    .selectAll("path")
+    .data( all)///hexbin(inputForHexbinFun) )
+    .enter().append("path")
+	.attr("d", hexbin.hexagon())
+	.attr("class",function(d,i) { return "class_"+i.toString(); })
+      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+	.attr("fill", function(d) { return color(d.length); })
+    .attr("stroke", "black")
+   // .attr("fill-opacity", function(d) { return Math.log(d.length)/Math.log(2500); })
+	  .attr("stroke-width", "0.1")
+	  .on("click",function(d){
+	      d3.selectAll("path").attr("stroke-width", "0.1");
+	      d3.select(this).attr("stroke", "black").attr("stroke-width", "1");
+	      d3.json("polygons/hexes/hexbin_no_"+d3.select(this).attr("class").split("_")[1]+".json",function(f){
+		  var vara=d3.keys(f);
+		  var vara0=d3.values(f);
+		  var html="<b>Top keywords:</b> ";
+		  if (vara.length<100){
+                      var nn=vara.length;
+		  }else {var nn=100;}
+		  for (var y=0; y<nn; y++){
+		      if (isNaN(vara[y])==true) {
+			  html+=vara[y]+", ";//+" - "+vara0[y]+", ";
+		      }
+		  }
+		  d3.select("#keywords").html(html.substr(0,html.length-2));
+	      })
+              add_table(d3.select(this).attr("class").split("_")[1]);
+	})
+  //})
+  });
+  
+  function modifyPolygon(e) {
+      if (e.target.value!="No journal layers") {
+//      alert("polygons/polygons_"+e.target.value.replaceAll(' ', '_')+".json");
+      d3.json("polygons/polygons_"+e.target.value.replaceAll(' ', '_')+".json", function(poly) {
+	  //console.log("polygons/polygons_"+e.target.value.replaceAll(' ', '_')+".json");
+	  //console.log(poly);
+	  svg.selectAll(".polygon").remove();
+	  for (var i=0; i<poly.reverse().length; i++) {
+	     // svg.selectAll(".polygon"+i.toString()).remove();
+	  svg.selectAll(".polygon .m"+i.toString())
+    .data([poly[i]])
+	      .enter().append("polygon")
+	      .attr("class","polygon m"+i.toString())
+    .attr("points",function(d) { 
+        return d.map(function(d) { return [x(d.x),y(d.y)].join(","); }).join(" ");})
+	      .attr("fill","yellow")
+	   .attr("fill-opacity",0.2)
+    .attr("stroke","black")
+	      .attr("stroke-width",0.5);
+      }
+  })
+      } else {
+svg.selectAll(".polygon").remove();
+      }
+  }
+  function getSearchResults(e) {
+//      alert(document.getElementById('search').value);
+  }
+  document.getElementById('select_menu').addEventListener("change", modifyPolygon, false);
+  document.getElementById('submit').addEventListener("click", getSearchResults, false);
+
+</script>
+
+
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/js/foundation.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/motion-ui/1.2.3/motion-ui.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>
+</body>
+</html>
