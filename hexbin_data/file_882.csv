@@ -1,3 +1,3 @@
-,title_x,publish_time_x,abstract,authors,journal,url,category
-69579,A monthly roundup of key articles in other journals.,2019-11-25,,,Health affairs,https://doi.org/10.1377/hlthaff.2018.0213; https://www.ncbi.nlm.nih.gov/pubmed/29608368/,882
-154742,A monthly roundup of key articles in other journals.,2020-11-20,,"Hale, David Edward; Green, Kemar Earl",Neurology,https://doi.org/10.1212/wnl.0000000000012659; https://www.ncbi.nlm.nih.gov/pubmed/34400581/,882
+,index,Unnamed: 0,title_x,x,y,publish_time_x,abstract,authors,journal,category,cluster
+69579,69579,69579,A monthly roundup of key articles in other journals.,12.941021,14.998762,2019-11-25,,,Health affairs,882,1
+154742,154742,154742,A monthly roundup of key articles in other journals.,12.939241,15.017286,2020-11-20,,"Hale, David Edward; Green, Kemar Earl",Neurology,882,9

@@ -1,6 +1,6 @@
-,title_x,publish_time_x,abstract,authors,journal,url,category
-35556,Samen met burger interventies ontwikkelen,2020-06-16,,"Kenny, Sue",Community Dev J,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7314259/,786
-37578,Vervang zeeheld door zorgheld,2020-08-18,,,Reactions Weekly,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7393021/,786
-43235,Lof der verpleegkunst,2020-12-22,,,MTZ Worldw,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7728460/,786
-51450,Integrative reviews,2021-04-20,,"I. Furlano, Raoul; Köhler, Henrik",P&#x000e4;diatrie,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8019300/,786
-51455,nieuws,2021-04-20,,,Ment Health Clin,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8019541/,786
+,index,Unnamed: 0,title_x,x,y,publish_time_x,abstract,authors,journal,category,cluster
+35556,35556,35556,Samen met burger interventies ontwikkelen,14.220854,-2.5997694,2020-06-16,,"Kenny, Sue",Community Dev J,786,1
+37578,37578,37578,Vervang zeeheld door zorgheld,14.214126,-2.4898577,2020-08-18,,,Reactions Weekly,786,1
+43235,43235,43235,Lof der verpleegkunst,14.054236,-2.1725717,2020-12-22,,,MTZ Worldw,786,12
+51450,51450,51450,Integrative reviews,14.14397,-2.225222,2021-04-20,,"I. Furlano, Raoul; Köhler, Henrik",P&#x000e4;diatrie,786,1
+51455,51455,51455,nieuws,14.234601,-2.408546,2021-04-20,,,Ment Health Clin,786,1
